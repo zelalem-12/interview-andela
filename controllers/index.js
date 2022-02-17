@@ -18,7 +18,7 @@ const postsController = async (req, res) => {
     console.log(mapedPosts);
     const csvText = generateCSV(mapedPosts, ",");
     console.log(csvText);
-    res.json(mapedPosts);
+    res.send(mapedPosts);
   } catch (err) {
     console.log(err);
     res
