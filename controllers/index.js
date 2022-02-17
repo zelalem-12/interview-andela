@@ -1,9 +1,11 @@
-const { getPostsData, getCommentsData } = require("../services");
+const { getPostsData, getCommentsData, generateCSV } = require("../services");
 
 const postsController = async (req, res) => {
   try {
     const posts = await getPostsData();
-    res.send(posts);
+    const csvText = generateCSV(posts, ",");
+    console.log(csvText);
+    res.json(posts);
   } catch (err) {
     res
       .status(err.status || 500)
@@ -14,7 +16,9 @@ const postsController = async (req, res) => {
 const commentController = async (req, res) => {
   try {
     const comments = await getCommentsData();
-    res.send(comments);
+    const csvText = generateCSV(comments, ",");
+    console.log(csvText);
+    res.json(comments);
   } catch (err) {
     res
       .status(err.status || 500)
