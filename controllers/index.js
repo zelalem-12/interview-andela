@@ -1,3 +1,6 @@
+const fs = require("fs");
+const writeFile = require("util").promisify(fs.writeFile);
+
 const { getPostsData, getCommentsData, generateCSV } = require("../services");
 
 const postsController = async (req, res) => {
@@ -12,10 +15,11 @@ const postsController = async (req, res) => {
         .map((comment) => comment.body)
         .join(/|/);
 
-      return postComment ? { ...post, comments: postComments } : post;
+      return postComments ? { ...post, comments: postComments } : post;
     });
     console.log(mapedPosts);
     const csvText = generateCSV(mapedPosts, ",");
+    await writeFile("posts.csv", csvText);
     console.log(csvText);
     res.send(mapedPosts);
   } catch (err) {
