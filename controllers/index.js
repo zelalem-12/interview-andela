@@ -1,19 +1,18 @@
-const { post } = require("../routes");
 const { getPostsData, getCommentsData, generateCSV } = require("../services");
 
 const postsController = async (req, res) => {
   try {
     const posts = await getPostsData();
     const comments = await getCommentsData();
+
     const mapedPosts = posts.map((post) => {
-      const postComment = (
+      const postComments = (
         comments.filter((comment) => comment.postId === post.id) || []
-      ).map((comment) => comment.name);
-      const commentedPost = {
-        ...post,
-        comment: postComment.length ? postComment.join(/|/) : postComment,
-      };
-      return commentedPost;
+      )
+        .map((comment) => comment.body)
+        .join(/|/);
+
+      return postComment ? { ...post, comments: postComments } : post;
     });
     console.log(mapedPosts);
     const csvText = generateCSV(mapedPosts, ",");
